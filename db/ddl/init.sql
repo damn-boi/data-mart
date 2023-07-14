@@ -1,48 +1,46 @@
-CREATE TABLE IF NOT EXISTS public.reader 
+CREATE TABLE IF NOT EXISTS public.products 
 (
-    reader_id integer PRIMARY KEY,
-    full_name text NOT NULL,
-    adress text,
-    phone_number text
+    product_id integer PRIMARY KEY,
+    product_name text NOT NULL,
+    price money NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS public.publisher
+CREATE TABLE IF NOT EXISTS public.shops
 (
-    publisher_id integer PRIMARY KEY,
-    publisher_name text NOT NULL,
-    publisher_city varchar(128) NOT NULL
+    shop_id integer PRIMARY KEY,
+    shop_name text NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS public.book 
+CREATE TABLE IF NOT EXISTS public.plan
 (
-    book_id integer PRIMARY KEY,
-    book_name text NOT NULL,
-    publish_year smallint NOT NULL,
-    page_volume integer NOT NULL,
-    book_price money NOT NULL,
-    books_available bigint NOT NULL,
-    fk_publisher_id integer REFERENCES public.publisher(publisher_id) 
+    product_id integer REFERENCES public.products(product_id),
+    -- fk_publisher_id integer REFERENCES public.publisher(publisher_id) 
+    shop_id integer REFERENCES public.shops(shop_id),
+    plan_cnt integer NOT NULL,
+    plan_date DATE NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS public.author 
+CREATE TABLE IF NOT EXISTS public.shop_dns
 (
-    author_id integer PRIMARY KEY,
-    author_full_name text NOT NULL
+    shop_id integer REFERENCES public.shops(shop_id),
+    date DATE NOT NULL,
+    product_id integer REFERENCES public.products(product_id),
+    sales_cnt integer NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS public.book_rental
+CREATE TABLE IF NOT EXISTS public.shop_mvideo
 (
-    reader_id integer REFERENCES public.reader(reader_id) NOT NULL,
-    book_id integer REFERENCES public.book(book_id) NOT NULL,
-    book_borrowed_date DATE NOT NULL,
-    book_returned_date DATE,
-
-    CONSTRAINT book_rental_pkey PRIMARY KEY (reader_id, book_id) -- composite key
+    shop_id integer REFERENCES public.shops(shop_id),
+    date DATE NOT NULL,
+    product_id integer REFERENCES public.products(product_id),
+    sales_cnt integer NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS public.book_author
+CREATE TABLE IF NOT EXISTS public.shop_sitilink
 (
-    book_id integer REFERENCES public.book(book_id) NOT NULL,
-    author_id integer REFERENCES public.author(author_id) NOT NULL,
-    CONSTRAINT book_author_pkey PRIMARY KEY (book_id, author_id) -- composite key
+    shop_id integer REFERENCES public.shops(shop_id),
+    date DATE NOT NULL,
+    product_id integer REFERENCES public.products(product_id),
+    sales_cnt integer NOT NULL
 );
+
